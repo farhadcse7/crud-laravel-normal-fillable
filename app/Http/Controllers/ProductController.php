@@ -31,13 +31,10 @@ class ProductController extends Controller
             ]
         );
 
-        $imagePath = $request->file('image') ? $request->file('image')->store('product-images', 'public') : null;
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imagePath,
-        ]);
+        $data = $request->all();
+        $data['image'] = $request->file('image') ? $request->file('image')->store('product-images', 'public') : null;
+
+        Product::create($data);
 
         return back()->with('message', 'New Product information added successfully');
     }
@@ -63,20 +60,16 @@ class ProductController extends Controller
             ]
         );
 
-        $imagePath = $product->image;
+        $data = $request->all();
+        $data['image'] = $product->image;
         if ($request->hasFile('image')) {
-            if ($imagePath) {
-                Storage::disk('public')->delete($imagePath);
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
             }
-            $imagePath = $request->file('image')->store('product-images', 'public');
+            $data['image'] = $request->file('image')->store('product-images', 'public');
         }
 
-        $product->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imagePath,
-        ]);
+        $product->update($data);
 
         return back()->with('message', 'Product information updated successfully');
     }
