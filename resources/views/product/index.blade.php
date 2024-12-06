@@ -58,7 +58,7 @@
                             <td>{{ $product->description }}</td>
                             <td>${{ $product->price }}</td>
                             <td>
-                                <img src="{{ asset('storage/'.$product->image) }}" alt="Product Image" class="img-thumbnail" style="width: 50px; height:50px" />
+                                <img src="{{ asset($product->image) }}" alt="Product Image" class="img-thumbnail" style="width: 50px; height:50px" />
                             </td>
                             <td>
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm text-white">View</a>

@@ -54,7 +54,7 @@
             <label for="image" class="form-label">Image</label>
             <!-- Existing image -->
             <div class="mb-3">
-                <img src="{{ asset('storage/'.$product->image) }}" alt="Current Product Image" class="img-thumbnail mb-3" style="max-width: 150px" />
+                <img src="{{ asset($product->image) }}" alt="Current Product Image" class="img-thumbnail mb-3" style="max-width: 150px" />
             </div>
             <!-- File input for uploading a new image -->
             <input type="file" id="image" class="form-control w-25" name="image" />

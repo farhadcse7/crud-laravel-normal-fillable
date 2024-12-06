@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -32,7 +32,13 @@ class ProductController extends Controller
         );
 
         $data = $request->all();
-        $data['image'] = $request->file('image') ? $request->file('image')->store('product-images', 'public') : null;
+
+        if ($image = $request->file('image')) {
+            $imageName = time() . '-' . Str::uuid() . '.' . $image->getClientOriginalExtension();
+            $directory = 'uploads/product-images/';
+            $image->move($directory, $imageName);
+            $data['image'] = $directory . $imageName;
+        }
 
         Product::create($data);
 
@@ -61,12 +67,16 @@ class ProductController extends Controller
         );
 
         $data = $request->all();
+
         $data['image'] = $product->image;
-        if ($request->hasFile('image')) {
+        if ($image = $request->file('image')) {
             if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+                unlink($product->image);
             }
-            $data['image'] = $request->file('image')->store('product-images', 'public');
+            $imageName = time() . '-' . Str::uuid() . '.' . $image->getClientOriginalExtension();
+            $directory = 'uploads/product-images/';
+            $image->move($directory, $imageName);
+            $data['image'] = $directory . $imageName;
         }
 
         $product->update($data);
@@ -76,8 +86,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+        if ($product->image && file_exists(public_path($product->image))) {
+            unlink($product->image);
         }
 
         $product->delete();

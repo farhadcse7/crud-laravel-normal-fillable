@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <th>Image</th>
-            <td><img src="{{ asset('storage/'.$product->image) }}" alt="product-image" class="img-thumbnail" width="250" /></td>
+            <td><img src="{{ asset($product->image) }}" alt="product-image" class="img-thumbnail" width="250" /></td>
         </tr>
     </table>
 
